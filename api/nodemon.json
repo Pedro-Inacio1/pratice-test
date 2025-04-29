@@ -1,0 +1,10 @@
+{
+    "env": {
+        "USER": "root",
+        "PASSWORD": "pmbbetim",
+        "DATABASE": "testePratico",
+        "HOST": "localhost",
+        "PORT": 3000,
+        "JWT_KEY": "123456789"
+    }
+}
