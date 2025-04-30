@@ -1,7 +1,9 @@
 import { useForm, useFieldArray, useWatch } from 'react-hook-form';
 import DefaultButton from '../styled-components/styled-button';
+import { useState } from 'react';
 
 interface Dependent {
+    id: number;
     dependentName: string;
     dependentAge: string;
     dependentGender: string;
@@ -16,7 +18,7 @@ interface FormValues {
     date_of_birth: string;
     salary: number;
     haveDependents: boolean;
-    dependents: Dependent[];
+    dependents?: Dependent[];
 }
 
 export default function MeuFormulario() {
@@ -45,6 +47,7 @@ export default function MeuFormulario() {
 
     const adicionarDependente = () => {
         append({
+            id: 0,
             dependentName: '',
             dependentAge: '',
             dependentGender: '',
@@ -55,131 +58,205 @@ export default function MeuFormulario() {
     };
 
     const onSubmit = (data: FormValues) => {
-        console.log(data);
+        // funcionario: {
+        //     nome: data.name,
+        //     CPF: data.cpf,
+        //     salario_bruto: data.salary,
+        //     desconto_previdencia: data.,
+        //     numero_dependentes: 2
+        // },
+        // dependentes: [
+        //     {
+        //         nome: "Maria Silva",
+        //         idade: 12,
+        //         data_nascimento: "2012-04-10",
+        //         possui_deficiencia: false,
+        //         nome_deficiencia: null
+        //     },
+        //     {
+        //         nome: "Carlos Silva",
+        //         idade: 10,
+        //         data_nascimento: "2014-06-21",
+        //         possui_deficiencia: true,
+        //         nome_deficiencia: "Autismo"
+        //     }
+        // ]
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <label>
-                Nome completo:
-                <input type="text" {...register('name', { required: "Informe o nome completo." })} />
-            </label>
-                <p className="text-red-500 text-sm">{errors.name?.message}</p>
+        <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+  <h1 className="text-2xl font-bold mb-6 text-center">Pedro Inácio</h1>
 
-            <label>
-                CPF:
-                <input type="text" {...register('cpf', {required: "Informe o CPF."})} />
-                <p className="text-red-500 text-sm">{errors.cpf?.message}</p>
-            </label>
+  <div className="space-y-4">
 
-            <label>
-                Data de nascimento:
-                <input type="date" {...register('date_of_birth', {required: "Informe a data de nascimento."})} />
-                <p className="text-red-500 text-sm">{errors.cpf?.message}</p>
-            </label>
+    <div>
+      <label className="block font-medium mb-1">
+        Nome completo:
+        <input
+          type="text"
+          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          {...register('name', { required: "Informe o nome completo." })}
+        />
+      </label>
+      <p className="text-red-500 text-sm">{errors.name?.message}</p>
+    </div>
 
-            <label>
-                Salário:
-                <input type="number" step="0.01" min="0" {...register('salary', {required: "Informe o salário."})} />
-            </label>
+    <div>
+      <label className="block font-medium mb-1">
+        CPF:
+        <input
+          type="text"
+          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          {...register('cpf', { required: "Informe o CPF." })}
+        />
+      </label>
+      <p className="text-red-500 text-sm">{errors.cpf?.message}</p>
+    </div>
 
-            <div>
-                Possui dependentes?
-                <input type="checkbox" {...register('haveDependents')} />
+    <div>
+      <label className="block font-medium mb-1">
+        Data de nascimento:
+        <input
+          type="date"
+          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          {...register('date_of_birth', { required: "Informe a data de nascimento." })}
+        />
+      </label>
+      <p className="text-red-500 text-sm">{errors.date_of_birth?.message}</p>
+    </div>
+
+    <div>
+      <label className="block font-medium mb-1">
+        Salário:
+        <input
+          type="number"
+          step="0.01"
+          min="0"
+          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+          {...register('salary', { required: "Informe o salário." })}
+        />
+      </label>
+      <p className="text-red-500 text-sm">{errors.salary?.message}</p>
+    </div>
+
+    <div className="flex items-center gap-2 mt-4">
+      <label className="font-medium">Possui dependentes?</label>
+      <input type="checkbox" {...register('haveDependents')} /> Sim
+      <input type="checkbox" {...register('haveDependents')} /> Não
+    </div>
+
+    {haveDependents && (
+      <div className="space-y-4 mt-6">
+        <button
+          type="button"
+          onClick={adicionarDependente}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+        >
+          Adicionar dependente
+        </button>
+
+        {fields.map((field, index) => (
+          <section key={field.id} className="border border-gray-300 p-4 rounded-md bg-gray-50">
+            <h4 className="font-semibold text-lg mb-2">Dependente {index + 1}</h4>
+
+            <div className="space-y-3">
+              <label className="block">
+                Nome do dependente:
+                <input
+                  type="text"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  {...register(`dependents.${index}.dependentName`, {
+                    required: 'Campo nome do dependente é obrigatório.',
+                  })}
+                />
+                {errors.dependents?.[index]?.dependentName && (
+                  <span className="text-red-500 text-sm">{errors.dependents[index].dependentName?.message}</span>
+                )}
+              </label>
+
+              <label className="block">
+                Idade:
+                <input
+                  type="text"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  {...register(`dependents.${index}.dependentAge`, {
+                    required: 'Campo idade é obrigatório.',
+                  })}
+                />
+                {errors.dependents?.[index]?.dependentAge && (
+                  <span className="text-red-500 text-sm">{errors.dependents[index].dependentAge?.message}</span>
+                )}
+              </label>
+
+              <label className="block">
+                Gênero:
+                <select
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  {...register(`dependents.${index}.dependentGender`, {
+                    required: 'Campo gênero é obrigatório.',
+                  })}
+                >
+                  <option value="">Selecione...</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Feminino">Feminino</option>
+                  <option value="Não binário">Não binário</option>
+                  <option value="Outros">Outros</option>
+                </select>
+                {errors.dependents?.[index]?.dependentGender && (
+                  <span className="text-red-500 text-sm">{errors.dependents[index].dependentGender?.message}</span>
+                )}
+              </label>
+
+              <label className="block">
+                Data de nascimento do dependente:
+                <input
+                  type="date"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  {...register(`dependents.${index}.dependent_date_of_birth`, {
+                    required: 'Campo data de nascimento é obrigatório.',
+                  })}
+                />
+                {errors.dependents?.[index]?.dependent_date_of_birth && (
+                  <span className="text-red-500 text-sm">{errors.dependents[index].dependent_date_of_birth?.message}</span>
+                )}
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  {...register(`dependents.${index}.dependent_have_deficiency`)}
+                />
+                Possui deficiência?
+              </label>
+
+              <label className="block">
+                Nome da deficiência (caso tenha):
+                <input
+                  type="text"
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  {...register(`dependents.${index}.dependent_name_deficiency`)}
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={() => remove(index)}
+                className="text-red-600 mt-2 hover:underline"
+              >
+                Remover dependente
+              </button>
             </div>
+          </section>
+        ))}
+      </div>
+    )}
 
-            {haveDependents && (
-                <>
-                    <button type="button" onClick={adicionarDependente}>
-                        Adicionar dependente
-                    </button>
+    <div className="mt-6">
+      <DefaultButton />
+    </div>
 
-                    {fields.map((field, index) => (
-                        <section key={field.id} style={{ border: '1px solid #ccc', marginTop: '1rem', padding: '1rem' }}>
-                            <h4>Dependente {index + 1}</h4>
+  </div>
+</form>
 
-                            <label>
-                                Nome do dependente:
-                                <input
-                                    type="text"
-                                    {...register(`dependents.${index}.dependentName`, {
-                                        required: 'Campo nome do dependente é obrigatório.',
-                                    })}
-                                />
-                                {errors.dependents?.[index]?.dependentName && (
-                                    <span>{errors.dependents[index].dependentName?.message}</span>
-                                )}
-                            </label>
-
-                            <label>
-                                Idade:
-                                <input
-                                    type="text"
-                                    {...register(`dependents.${index}.dependentAge`, {
-                                        required: 'Campo idade é obrigatório.',
-                                    })}
-                                />
-                                {errors.dependents?.[index]?.dependentAge && (
-                                    <span>{errors.dependents[index].dependentAge?.message}</span>
-                                )}
-                            </label>
-
-                            <label>
-                                Gênero:
-                                <select
-                                    {...register(`dependents.${index}.dependentGender`, {
-                                        required: 'Campo gênero é obrigatório.',
-                                    })}
-                                >
-                                    <option value="">Selecione...</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Feminino">Feminino</option>
-                                    <option value="Não binário">Não binário</option>
-                                    <option value="Outros">Outros</option>
-                                </select>
-                                {errors.dependents?.[index]?.dependentGender && (
-                                    <span>{errors.dependents[index].dependentGender?.message}</span>
-                                )}
-                            </label>
-
-                            <label>
-                                Data de nascimento do dependente:
-                                <input
-                                    type="date"
-                                    {...register(`dependents.${index}.dependent_date_of_birth`, {
-                                        required: 'Campo data de nascimento é obrigatório.',
-                                    })}
-                                />
-                                {errors.dependents?.[index]?.dependent_date_of_birth && (
-                                    <span>{errors.dependents[index].dependent_date_of_birth?.message}</span>
-                                )}
-                            </label>
-
-                            <label>
-                                Possui deficiência?
-                                <input
-                                    type="checkbox"
-                                    {...register(`dependents.${index}.dependent_have_deficiency`)}
-                                />{' '}
-                                Sim
-                            </label>
-
-                            <label>
-                                Nome da deficiência (caso tenha):
-                                <input
-                                    type="text"
-                                    {...register(`dependents.${index}.dependent_name_deficiency`)}
-                                />
-                            </label>
-                            <button type="button" onClick={() => remove(index)} style={{ marginTop: '0.5rem', color: 'red' }}>
-                                Remover dependente
-                            </button>
-                        </section>
-                    ))}
-                </>
-            )}
-
-            <DefaultButton/>
-        </form>
     );
 }

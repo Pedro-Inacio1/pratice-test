@@ -5,10 +5,12 @@ const StyledBtn = styled.button`
     height: 30px;
     padding: 20;
     background-color: black;
+    color: #fff;
 
     &:hover {
         background-color: white;
         color: black;
+        cursor: pointer;
     }
 `
 

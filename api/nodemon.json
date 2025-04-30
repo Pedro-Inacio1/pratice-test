@@ -1,10 +1,10 @@
 {
     "env" :{
         "USER" : "root",
-        "PASSWORD" : "kyz24",
+        "PASSWORD" : "",
         "DATABASE" : "testePratico",
         "HOST" : "localhost",
-        "PORT" : 8000,
+        "PORT" : 3000,
         "JWT_KEY" : 1234567
     }
 }
