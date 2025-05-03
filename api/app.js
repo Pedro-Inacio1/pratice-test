@@ -12,8 +12,14 @@ app.use(morgan('dev'));
 
 app.use(cors())
 
-app.post('/register', EmployeeController.registerEmployeeController)
 app.post('/registerTest', EmployeeController.registerFullEmployeeController)
 app.post('/calculatorIRRF', EmployeeController.IRRFCalculatorController)
+app.get('/getEmployees', EmployeeController.bringEmployes)
+app.post('/search', EmployeeController.searchEmployeeController)
+app.get('/getDependents/:id', EmployeeController.getDependentsController);
+app.post('/delEmployee', EmployeeController.delEmployeeController)
+app.post('/alterData', EmployeeController.alterController)
+app.post('/auth', EmployeeController.AuthController)
+app.post('/register', EmployeeController.registerUserController)
 
 export default app;

@@ -1,7 +1,7 @@
 {
     "env" :{
         "USER" : "root",
-        "PASSWORD" : "",
+        "PASSWORD" : "kyz24",
         "DATABASE" : "testePratico",
         "HOST" : "localhost",
         "PORT" : 3000,
