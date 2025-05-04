@@ -1,7 +1,7 @@
 import React from "react";
 import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/home";
+import Home from "./components/Home";
 import RegisterEmployee from "./components/register-employee";
 import Login from "./components/Authenticate";
 
