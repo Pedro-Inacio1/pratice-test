@@ -1,54 +1,96 @@
-# React + TypeScript + Vite
+  # Gerenciamento de funcionários com js
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é um sistema simples para gerenciar funcionários, construído com typescript & react no front e node no back.
 
-Currently, two official plugins are available:
+## Funcionalidades
+- Cadastro de funcionários e seus dependentes
+- Pesquisa de funcionários por nome ou CPF
+- Deleção de funcionários
+- Listagem de funcionários
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias Utilizadas
+- React
+- Typescript
+- Context api
+- MySQL Workbanch (banco de dados)
+- TailWind para estilização
+- MySQL Workbanch (banco de dados)
+- lodash.debaunce
+- babel
+- jest
+- sweetalert2
+- styled-components
+- bcrypt
+- jsonwebtoken
+- react-router-dom
+- react-icons
 
-## Expanding the ESLint configuration
+## Instalação
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/Pedro-Inacio1/pratice-test.git
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+2. Acesse a pasta raiz do projeto e rode os comandos:
+  npm install vite
+  npm install tailwindcss @tailwindcss/vite
+  npm run dev
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3- Acesse a pasta api e rode o comando:
+  npm install cors
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+4- Vá no nodemon.json e coloque suas informações de acesso ao banco de dados
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+5- No seu banco de dados, cole e crie as seguintes tabelas:
+create table funcionarios(
+	  id int primary key auto_increment,
+    nome varchar(255) not null,
+    cpf varchar(50) not null unique,
+    salario_bruto double not null,
+    desconto_previdencia double not null,
+    numero_dependentes int not null,
+    desconto_IRPF double not null
+);
+
+create table usuarios(
+	id int primary key auto_increment,
+    nome varchar(255) not null,
+    cpf varchar(50) not null unique,
+    SENHA varchar(255) not null
+);
+
+create table dependents(
+	  id int primary key auto_increment,
+    nome varchar(255) not null,
+    idade int not null,
+    data_nascimento date,
+    possui_deficiencia boolean not null,
+	  nome_deficiencia varchar(255),
+    id_funcionario int not null
+);
+
+6- Insira um usuário manualmente no banco de dados ou vá ate o postman ou insomnia para enviar dados para se ter um usuário. JSON para se cadastrar um novo usuário:
+{
+    "data": {   
+        "nome" : "yourname",
+        "cpf" : "12345678910",
+        "SENHA" : "yourpassword"
+    }
+}
+
+Endpoints
+GET /tarefas
+Retorna uma lista de todas as tarefas.
+POST /registerTest - Cadastra um novo funcionário com os dependentes sendo opcionais 
+POST /calculatorIRRF - Endpoint que usei para testar a lógica do cálculo do IRRF
+GET /getEmployees - Retorna todos os funcionários
+GET /getDependents/:id - Retorna todos os dependentes pelo id do funcionário
+POST /delEmployee - Apaga um funcionário por ID
+POST /alterData - Altera as informações de um funcionário
+POST /auth - Autentica um usuário 
+POST /register - Cadastra um novo usuário 
+
+## Observações
+
+Alteração de dados de um funcionário está feita no backend, mas não imolementada no frontend.
+Não consegui testar a aplicação por completo no tempo estipulado.
